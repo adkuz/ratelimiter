@@ -34,6 +34,9 @@ func main() {
 			Interval: 30 * time.Second,
 			Limit:    10,
 		},
+
+		// channel size (for buffered chan)
+		ChannelSize: 42,
 	}
 
 	limiter, err := ratelimiter.MakeRateLimiter(option)
@@ -41,18 +44,25 @@ func main() {
 		panic(err) // or handle
 	}
 
-	for i := 0; i < 20; i++ {
-
-		functionWrapper := func(id int) func() {
-			return func() {
-				fmt.Printf("[%s] hello from task %d\n", time.Now().String(), id)
-			}
+	// it will be useful later
+	functionWrapper := func(id int) func() {
+		return func() {
+			fmt.Printf("[%s] hello from task %d\n", time.Now().String(), id)
 		}
+	}
 
+	for i := 0; i < 20; i++ {
 		function := functionWrapper(i)
 
 		// add function to queue (fifo is not guaranteed) for performing
 		limiter.Perform(function)
+	}
+
+	inputChan := limiter.GetChannel()
+
+	for i := 20; i < 30; i++ {
+		// add function to queue (fifo is not guaranteed) for performing
+		inputChan <- functionWrapper(i)
 	}
 
 	for !limiter.Empty() {
