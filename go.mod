@@ -1,4 +1,4 @@
-module ratelimiter
+module github.com/Alex-Kuz/ratelimiter
 
 go 1.16
 
