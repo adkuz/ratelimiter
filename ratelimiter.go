@@ -49,6 +49,10 @@ func (r *RateLimiter) Perform(function SimpleFunc) {
 	r.channel <- function
 }
 
+func (r *RateLimiter) GetChannel() chan<- SimpleFunc {
+	return r.channel
+}
+
 func (r *RateLimiter) Empty() bool {
 	return len(r.channel)+int(atomic.LoadUint32(&r.performCount)) == 0
 }

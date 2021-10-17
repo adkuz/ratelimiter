@@ -10,7 +10,7 @@ Test package:
 - `git clone github.com/Alex-Kuz/ratelimiter`
 - `cd ratelimiter`
 - `go mod vendor`
-- `go test`
+- `go test` - it may take a few minutes
 
 Usage: 
 

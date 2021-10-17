@@ -79,7 +79,7 @@ func testIntervalLimit(t *testing.T, testCase *TestCase, opts *RateLimiterOption
 	intervals := make([]FuncTimeInterval, 0)
 
 	perform := func(id int, duration time.Duration) {
-		limiter.Perform(func() {
+		limiter.GetChannel() <- func() {
 			start := time.Now()
 
 			time.Sleep(duration)
@@ -89,7 +89,7 @@ func testIntervalLimit(t *testing.T, testCase *TestCase, opts *RateLimiterOption
 				start: start,
 				end:   time.Now(),
 			}
-		})
+		}
 	}
 
 	go func() {
